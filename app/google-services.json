@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "509136069692",
+    "firebase_url": "https://gossip-fdd8a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "gossip-fdd8a",
+    "storage_bucket": "gossip-fdd8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509136069692:android:6706a44877b0c646338f39",
+        "android_client_info": {
+          "package_name": "com.example.gossip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlCwNnKNP54Mknr5URn4s-5lZwF9gwO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509136069692:android:98f495f806c7d434338f39",
+        "android_client_info": {
+          "package_name": "com.example.numberlogin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJlCwNnKNP54Mknr5URn4s-5lZwF9gwO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

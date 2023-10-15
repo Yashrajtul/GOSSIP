@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,18 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,10 +40,6 @@ import com.example.gossip.R
 import com.example.gossip.common.CommonDialog
 import com.example.gossip.common.OTPTextFields
 import com.example.gossip.ui.theme.Purple80
-import com.example.gossip.utils.ResultState
-import com.example.gossip.utils.showMsg
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,10 +50,10 @@ fun PhoneAuthScreen(
 ) {
     var mobile by remember { mutableStateOf("") }
     var otp by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
-    var isDialog by remember { mutableStateOf(false) }
+//    val scope = rememberCoroutineScope()
+//    var isDialog1 by remember { mutableStateOf(false) }
 
-    if(isDialog)
+    if(viewModel.isDialog)
         CommonDialog()
 
     Column(
@@ -110,26 +102,27 @@ fun PhoneAuthScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = {
-                          scope.launch(Dispatchers.Main){
-                              viewModel.createUserWithPhone(
-                                  mobile,
-                                  activity
-                              ).collect{
-                                  when(it){
-                                      is ResultState.Success->{
-                                          isDialog = false
-                                          activity.showMsg(it.data)
-                                      }
-                                      is ResultState.Failure->{
-                                          isDialog = false
-                                          activity.showMsg(it.msg.toString())
-                                      }
-                                      ResultState.Loading->{
-                                          isDialog = true
-                                      }
-                                  }
-                              }
-                          }
+                    viewModel.sendOtp(mobile, activity)
+//                          scope.launch(Dispatchers.Main){
+//                              viewModel.createUserWithPhone(
+//                                  mobile,
+//                                  activity
+//                              ).collect{
+//                                  when(it){
+//                                      is ResultState.Success->{
+//                                          isDialog = false
+//                                          activity.showMsg(it.data)
+//                                      }
+//                                      is ResultState.Failure->{
+//                                          isDialog = false
+//                                          activity.showMsg(it.msg.toString())
+//                                      }
+//                                      ResultState.Loading->{
+//                                          isDialog = true
+//                                      }
+//                                  }
+//                              }
+//                          }
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -155,25 +148,26 @@ fun PhoneAuthScreen(
             Spacer(modifier = Modifier.height(30.dp))
             Button(
                 onClick = {
-                    scope.launch(Dispatchers.Main){
-                        viewModel.signInWithCredential(
-                            otp
-                        ).collect{
-                            when(it){
-                                is ResultState.Success->{
-                                    isDialog = false
-                                    activity.showMsg(it.data)
-                                }
-                                is ResultState.Failure->{
-                                    isDialog = false
-                                    activity.showMsg(it.msg.toString())
-                                }
-                                ResultState.Loading->{
-                                    isDialog = true
-                                }
-                            }
-                        }
-                    }
+                    viewModel.verifyOtp(otp, activity)
+//                    scope.launch(Dispatchers.Main){
+//                        viewModel.signInWithCredential(
+//                            otp
+//                        ).collect{
+//                            when(it){
+//                                is ResultState.Success->{
+//                                    isDialog = false
+//                                    activity.showMsg(it.data)
+//                                }
+//                                is ResultState.Failure->{
+//                                    isDialog = false
+//                                    activity.showMsg(it.msg.toString())
+//                                }
+//                                ResultState.Loading->{
+//                                    isDialog = true
+//                                }
+//                            }
+//                        }
+//                    }
                 }, modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(45.dp)

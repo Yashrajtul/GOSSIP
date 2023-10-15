@@ -1,6 +1,8 @@
 package com.example.gossip.repository.auth
 
 import android.app.Activity
+import android.app.Application
+import com.example.gossip.R
 import com.example.gossip.utils.ResultState
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +19,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val authdb: FirebaseAuth
 ) : AuthRepository {
     private lateinit var mVerificationCode:String
+
+
     override fun createUserWithPhone(phone: String, activity: Activity): Flow<ResultState<String>> = callbackFlow{
         trySend(ResultState.Loading)
 

@@ -64,11 +64,10 @@ fun PhoneAuthScreen(
     if(isDialog)
         CommonDialog()
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.Center
+            .padding(horizontal = 20.dp)
     ){
         Column (
             modifier = Modifier.fillMaxWidth(),
@@ -194,10 +193,10 @@ fun PhoneAuthScreen(
 
 
 
-@Preview(showSystemUi = true)
-@Composable
-fun PhoneAuthScreenPreview() {
-    PhoneAuthScreen(
-        LocalContext.current as Activity
-    )
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PhoneAuthScreenPreview() {
+//    PhoneAuthScreen(
+//        LocalContext.current as Activity
+//    )
+//}

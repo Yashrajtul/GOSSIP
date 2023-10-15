@@ -50,8 +50,6 @@ fun PhoneAuthScreen(
 ) {
     var mobile by remember { mutableStateOf("") }
     var otp by remember { mutableStateOf("") }
-//    val scope = rememberCoroutineScope()
-//    var isDialog1 by remember { mutableStateOf(false) }
 
     if(viewModel.isDialog)
         CommonDialog()
@@ -103,26 +101,6 @@ fun PhoneAuthScreen(
             Button(
                 onClick = {
                     viewModel.sendOtp(mobile, activity)
-//                          scope.launch(Dispatchers.Main){
-//                              viewModel.createUserWithPhone(
-//                                  mobile,
-//                                  activity
-//                              ).collect{
-//                                  when(it){
-//                                      is ResultState.Success->{
-//                                          isDialog = false
-//                                          activity.showMsg(it.data)
-//                                      }
-//                                      is ResultState.Failure->{
-//                                          isDialog = false
-//                                          activity.showMsg(it.msg.toString())
-//                                      }
-//                                      ResultState.Loading->{
-//                                          isDialog = true
-//                                      }
-//                                  }
-//                              }
-//                          }
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -149,25 +127,6 @@ fun PhoneAuthScreen(
             Button(
                 onClick = {
                     viewModel.verifyOtp(otp, activity)
-//                    scope.launch(Dispatchers.Main){
-//                        viewModel.signInWithCredential(
-//                            otp
-//                        ).collect{
-//                            when(it){
-//                                is ResultState.Success->{
-//                                    isDialog = false
-//                                    activity.showMsg(it.data)
-//                                }
-//                                is ResultState.Failure->{
-//                                    isDialog = false
-//                                    activity.showMsg(it.msg.toString())
-//                                }
-//                                ResultState.Loading->{
-//                                    isDialog = true
-//                                }
-//                            }
-//                        }
-//                    }
                 }, modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(45.dp)

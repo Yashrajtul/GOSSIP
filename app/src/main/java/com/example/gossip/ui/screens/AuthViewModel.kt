@@ -19,6 +19,7 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel(){
 
     var isDialog by mutableStateOf(false)
+        private set
     private fun createUserWithPhone(
         phone:String,
         activity: Activity

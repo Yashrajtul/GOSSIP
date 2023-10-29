@@ -13,10 +13,17 @@ import javax.inject.Inject
 class RealtimeDbRepository @Inject constructor(
     private val db: DatabaseReference
 ) : RealtimeRepository {
-    override fun insertUser(user: RealtimeModelResponse.User): Flow<ResultState<String>> =
+    override fun insertUserChats(userChats: RealtimeModelResponse): Flow<ResultState<String>> =
         callbackFlow {
             trySend(ResultState.Loading)
 
+            db.child(userChats.key!!)
+                .setValue(userChats.userChats)
+                .addOnSuccessListener {
+
+                }.addOnFailureListener {
+
+                }
 
             awaitClose {
                 close()
@@ -30,7 +37,7 @@ class RealtimeDbRepository @Inject constructor(
             override fun onDataChange(snapshot: DataSnapshot) {
                 val items = snapshot.children.map {
                     RealtimeModelResponse(
-                        it.getValue(RealtimeModelResponse.User::class.java),
+                        it.getValue(RealtimeModelResponse.UserChats::class.java),
                         key = it.key
 
                     )
@@ -72,9 +79,8 @@ class RealtimeDbRepository @Inject constructor(
         trySend(ResultState.Loading)
 
         val map = HashMap<String, Any>()
-        map["first"] = res.user?.first!!
-        map["last"] = res.user.last!!
-        map["image"] = res.user.image!!
+        map["chatRooms"] = res.userChats?.chatRooms!!
+        map["chatter"] = res.userChats.chatter!!
 
         db.child(res.key!!).updateChildren(
             map

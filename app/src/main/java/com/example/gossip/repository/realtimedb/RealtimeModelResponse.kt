@@ -1,15 +1,12 @@
 package com.example.gossip.repository.realtimedb
 
-import android.media.Image
-
 data class RealtimeModelResponse(
-    val user: User?,
+    val userChats: UserChats?,
     val key: String?
 
 ){
-    data class User(
-        val first: String?,
-        val last: String?,
-        val image: String?
+    data class UserChats(
+        val chatRooms: List<String>? = emptyList(),
+        val chatter: String? = ""
     )
 }

@@ -1,8 +1,7 @@
-package com.example.gossip.repository.auth
+package com.example.gossip.firebaseauth.repository
 
 import android.app.Activity
-import android.app.Application
-import com.example.gossip.R
+import com.example.gossip.repository.auth.AuthRepository
 import com.example.gossip.utils.ResultState
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -19,9 +18,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val authdb: FirebaseAuth
 ) : AuthRepository {
     private lateinit var mVerificationCode:String
-
-
-    override fun createUserWithPhone(phone: String, activity: Activity): Flow<ResultState<String>> = callbackFlow{
+    private lateinit var resendingToken:PhoneAuthProvider.ForceResendingToken
+    override fun createUserWithPhone(phone: String, activity: Activity, resend: Boolean): Flow<ResultState<String>> = callbackFlow{
         trySend(ResultState.Loading)
 
         val onVerificationCallback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
@@ -31,15 +29,14 @@ class AuthRepositoryImpl @Inject constructor(
 
             override fun onVerificationFailed(p0: FirebaseException) {
                 trySend(ResultState.Failure(p0))
-
             }
 
-            override fun onCodeSent(verificationCode: String, p1: PhoneAuthProvider.ForceResendingToken) {
-                super.onCodeSent(verificationCode, p1)
+            override fun onCodeSent(verificationCode: String, forceResendingToken: PhoneAuthProvider.ForceResendingToken) {
+                super.onCodeSent(verificationCode, forceResendingToken)
                 trySend(ResultState.Success("OTP Sent Successfully"))
                 mVerificationCode = verificationCode
+                resendingToken = forceResendingToken
             }
-
 
         }
         val options = PhoneAuthOptions.newBuilder(authdb)
@@ -47,20 +44,24 @@ class AuthRepositoryImpl @Inject constructor(
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(onVerificationCallback)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+        if(resend)
+            PhoneAuthProvider.verifyPhoneNumber(options.setForceResendingToken(resendingToken).build())
+        else
+            PhoneAuthProvider.verifyPhoneNumber(options.build())
         awaitClose {
             close()
         }
     }
+
 
     override fun signWithCredential(otp: String): Flow<ResultState<String>> = callbackFlow{
         trySend(ResultState.Loading)
         val credential = PhoneAuthProvider.getCredential(mVerificationCode, otp)
         authdb.signInWithCredential(credential)
             .addOnCompleteListener {
-                if(it.isSuccessful)
+                if(it.isSuccessful){
                     trySend(ResultState.Success("OTP Verified"))
+                }
             }
             .addOnFailureListener {
                 trySend(ResultState.Failure(it))
@@ -68,5 +69,10 @@ class AuthRepositoryImpl @Inject constructor(
         awaitClose {
             close()
         }
+    }
+
+
+    override fun currentUser(): String{
+        return authdb.currentUser?.uid ?: ""
     }
 }

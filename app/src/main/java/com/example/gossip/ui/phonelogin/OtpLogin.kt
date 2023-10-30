@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gossip.R
-import com.example.gossip.firebaseauth.common.CommonDialog
-import com.example.gossip.firebaseauth.common.OTPTextFields
+import com.example.gossip.common.CommonDialog
+import com.example.gossip.common.OTPTextFields
 import kotlinx.coroutines.delay
 
 @Composable

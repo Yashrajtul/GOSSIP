@@ -4,8 +4,8 @@ import android.app.Activity
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gossip.firebaseauth.repository.AuthRepository
-import com.example.gossip.firestoredb.UserDataModelResponse
+import com.example.gossip.model.UserDataModelResponse
+import com.example.gossip.repository.auth.AuthRepository
 import com.example.gossip.repository.firestoredb.FirestoreRepository
 import com.example.gossip.utils.ResultState
 import com.example.gossip.utils.showMsg

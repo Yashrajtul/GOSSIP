@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.gossip.R
-import com.example.gossip.firebaseauth.common.CommonDialog
+import com.example.gossip.common.CommonDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

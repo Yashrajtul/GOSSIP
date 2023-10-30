@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.gossip.R
-import com.example.gossip.common.CommonDialog
+import com.example.gossip.firebaseauth.common.CommonDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +66,7 @@ fun DetailsLogin(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    var imageUri: Any? by remember { mutableStateOf(R.drawable.baseline_account_circle_24) }
+//    var imageUri: Any? by remember { mutableStateOf(R.drawable.baseline_account_circle_24) }
     val photoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) {
@@ -137,6 +137,7 @@ fun DetailsLogin(
                 }
             ),
             isError = isError,
+            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

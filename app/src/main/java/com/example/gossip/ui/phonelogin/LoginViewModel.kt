@@ -4,9 +4,9 @@ import android.app.Activity
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gossip.repository.auth.AuthRepository
+import com.example.gossip.firebaseauth.repository.AuthRepository
+import com.example.gossip.firestoredb.UserDataModelResponse
 import com.example.gossip.repository.firestoredb.FirestoreRepository
-import com.example.gossip.model.UserDataModelResponse
 import com.example.gossip.utils.ResultState
 import com.example.gossip.utils.showMsg
 import com.google.firebase.Timestamp
@@ -65,7 +65,7 @@ class LoginViewModel @Inject constructor(
                 ).collect { it ->
                     when (it) {
                         is ResultState.Success -> {
-                            _loginUiState.update { it.copy(isDialog = false, isButtonEnabled = false, otpSent = true) }
+                            _loginUiState.update { it.copy(isDialog = false, otpSent = true) }
                             activity.showMsg(it.data)
                         }
 
@@ -132,11 +132,13 @@ class LoginViewModel @Inject constructor(
     private fun getUserData(userId: String) {
         viewModelScope.launch {
             fstoreRepo.getUserData(userId)
-                .collect { user->
+                .collect { user ->
                     when (user) {
-                        is ResultState.Success -> { _loginUiState.update {
-                            it.copy(isDialog = false, username = user.data.user?.username!!)
-                        } }
+                        is ResultState.Success -> {
+                            _loginUiState.update { it.copy(isDialog = false)}
+                            if(user.data != null)
+                                _loginUiState.update { it.copy( username = user.data.username!!) }
+                        }
                         is ResultState.Failure -> { _loginUiState.update { it.copy(isDialog = false) } }
                         ResultState.Loading -> { _loginUiState.update { it.copy(isDialog = true) } }
                     }

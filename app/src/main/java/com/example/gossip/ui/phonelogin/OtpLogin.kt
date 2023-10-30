@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gossip.R
-import com.example.gossip.common.CommonDialog
-import com.example.gossip.common.OTPTextFields
+import com.example.gossip.firebaseauth.common.CommonDialog
+import com.example.gossip.firebaseauth.common.OTPTextFields
 import kotlinx.coroutines.delay
 
 @Composable
@@ -94,7 +94,7 @@ fun OtpScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = if(timer==0L) "" else "Resend OTP in $timer sec",
+            text = if(timer==0L) "" else "Resend OTP in ${timer.toString()} sec",
             fontSize = 17.sp
         )
     }

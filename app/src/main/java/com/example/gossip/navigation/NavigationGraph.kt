@@ -41,7 +41,6 @@ fun NavigationGraph(activity: Activity) {
                 Login(
                     phoneNumber = loginState.value.phoneNumber,
                     isError = loginState.value.isError,
-                    isButtonEnabled = loginState.value.isButtonEnabled,
                     isDialog = loginState.value.isDialog,
                     getPhoneNumber = viewModel::getPhoneNumber,
                     sendOtp = { viewModel.sendOtp(activity) }

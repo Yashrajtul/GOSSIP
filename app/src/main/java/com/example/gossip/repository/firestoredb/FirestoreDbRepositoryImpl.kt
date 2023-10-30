@@ -44,23 +44,14 @@ class FirestoreDbRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun getUserData(key: String): Flow<ResultState<UserDataModelResponse>> = callbackFlow{
+    override fun getUserData(key: String): Flow<ResultState<UserDataModelResponse.User?>> = callbackFlow{
         trySend(ResultState.Loading)
 
         db.collection("user")
             .document(key)
             .get()
             .addOnSuccessListener {data->
-
-                val user = UserDataModelResponse(
-                    user = UserDataModelResponse.User(
-                        username = data["username"] as String,
-                        phone = data["phone"] as String,
-                        userId = data["userId"] as String,
-                        createdTimestamp = data["createdTimestamp"] as Timestamp
-                    ),
-                    key = key
-                )
+                val user: UserDataModelResponse.User? = data.toObject(UserDataModelResponse.User::class.java)
                 trySend(ResultState.Success(user))
             }.addOnFailureListener {
                 trySend(ResultState.Failure(it))

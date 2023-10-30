@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gossip.R
-import com.example.gossip.common.CommonDialog
+import com.example.gossip.firebaseauth.common.CommonDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +44,6 @@ fun Login(
     phoneNumber: String,
     isDialog: Boolean,
     isError: Boolean,
-    isButtonEnabled: Boolean,
     getPhoneNumber: (phoneNumber: String) -> Unit,
     sendOtp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -87,13 +87,11 @@ fun Login(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    // Handle login button click here
-                    if (isButtonEnabled) {
-                        sendOtp()
-                    }
+                    sendOtp()
                     focusManager.clearFocus()
                 }
             ),
+            maxLines = 1,
             isError = isError,
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,10 +132,8 @@ fun LoginPreview() {
         phoneNumber = "9914",
         isDialog = false,
         isError = true,
-        isButtonEnabled = true,
         getPhoneNumber = {},
         sendOtp = {},
-//        checkError = {}
     )
 }
 @Preview(showBackground = true)
@@ -147,10 +143,8 @@ fun LoginPreview1() {
         phoneNumber = "",
         isDialog = false,
         isError = false,
-        isButtonEnabled = false,
         getPhoneNumber = {},
         sendOtp = {},
-//        checkError = {}
     )
 }
 @Preview(showBackground = true)
@@ -160,9 +154,7 @@ fun LoginPreview2() {
         phoneNumber = "",
         isDialog = true,
         isError = false,
-        isButtonEnabled = true,
         getPhoneNumber = {},
         sendOtp = {},
-//        checkError = {}
     )
 }

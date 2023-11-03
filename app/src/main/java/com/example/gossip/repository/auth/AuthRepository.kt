@@ -16,5 +16,7 @@ interface AuthRepository {
         otp: String
     ):Flow<ResultState<String>>
 
+    fun signOut()
+
     fun currentUser():String
 }

@@ -2,6 +2,9 @@ package com.example.gossip.ui.phonelogin
 
 import android.app.Activity
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gossip.model.UserDataModelResponse
@@ -26,6 +29,8 @@ class LoginViewModel @Inject constructor(
     private val _loginUiState = MutableStateFlow(LoginState())
     val loginUiState: StateFlow<LoginState> = _loginUiState.asStateFlow()
 
+    private  var userId: String by mutableStateOf("")
+
     fun getPhoneNumber(phoneNumber: String) {
         _loginUiState.update {
             it.copy(
@@ -47,6 +52,10 @@ class LoginViewModel @Inject constructor(
         _loginUiState.update { it.copy(image = image) }
     }
 
+    fun updateNavigationState(){
+        _loginUiState.update { it.copy(navigate = false) }
+    }
+
     private fun checkError() {
         _loginUiState.update { it.copy(isError = loginUiState.value.phoneNumber.length != 10) }
     }
@@ -65,7 +74,7 @@ class LoginViewModel @Inject constructor(
                 ).collect { it ->
                     when (it) {
                         is ResultState.Success -> {
-                            _loginUiState.update { it.copy(isDialog = false, otpSent = true) }
+                            _loginUiState.update { it.copy(isDialog = false, navigate = true) }
                             activity.showMsg(it.data)
                         }
 
@@ -92,10 +101,10 @@ class LoginViewModel @Inject constructor(
             ).collect { it ->
                 when (it) {
                     is ResultState.Success -> {
-                        _loginUiState.update { it.copy(isOtpVerified = true, isError = false) }
-                        val userId = authRepo.currentUser()
-                        getUserData(userId)
-                        getProfilePic(userId)
+                        _loginUiState.update { it.copy(navigate = true, isError = false) }
+                        userId = authRepo.currentUser()
+                        getUserData()
+                        getProfilePic()
 
                         _loginUiState.update { it.copy(isDialog = false) }
                         activity.showMsg(it.data)
@@ -114,14 +123,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun getProfilePic(userId: String) {
+    private fun getProfilePic() {
         viewModelScope.launch {
             fstoreRepo.getProfilePic(userId)
                 .collect { imageUri ->
                     when (imageUri) {
                         is ResultState.Success -> { _loginUiState.update {
-                                it.copy(isDialog = false, image = imageUri.data)
-                            } }
+                            it.copy(isDialog = false, image = imageUri.data)
+                        } }
                         is ResultState.Failure -> { _loginUiState.update { it.copy(isDialog = false) } }
                         ResultState.Loading -> { _loginUiState.update { it.copy(isDialog = true) } }
                     }
@@ -129,7 +138,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun getUserData(userId: String) {
+    private fun getUserData() {
         viewModelScope.launch {
             fstoreRepo.getUserData(userId)
                 .collect { user ->
@@ -168,9 +177,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun updateProfilePicture(image: Uri, key: String) {
+    private fun updateProfilePicture(image: Uri) {
         viewModelScope.launch {
-            fstoreRepo.uploadPic(image, key)
+            fstoreRepo.uploadPic(image, userId)
                 .collect {it->
                     when (it) {
                         is ResultState.Success -> { _loginUiState.update { it.copy(isDialog = false) }}
@@ -189,7 +198,6 @@ class LoginViewModel @Inject constructor(
             activity.showMsg("Username length should be at least 3 chars")
             return
         }
-        val userId = authRepo.currentUser()
         val user = UserDataModelResponse(
             user = UserDataModelResponse.User(
                 username = loginUiState.value.username,
@@ -200,7 +208,7 @@ class LoginViewModel @Inject constructor(
             key = userId
         )
         if(loginUiState.value.image != null)
-            updateProfilePicture(loginUiState.value.image!!, userId)
+            updateProfilePicture(loginUiState.value.image!!)
         updateUser(user, activity)
     }
 
@@ -226,8 +234,7 @@ data class LoginState(
     var isButtonEnabled: Boolean = false,
     var isError: Boolean = false,
     var resend: Boolean = false,
-    var otpSent: Boolean = false,
-    var isOtpVerified: Boolean = false,
+    var navigate: Boolean = false,
     var image: Uri? = null,
     var timer: Long = 60L
 )

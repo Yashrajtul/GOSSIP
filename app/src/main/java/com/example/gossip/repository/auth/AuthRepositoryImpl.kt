@@ -1,4 +1,4 @@
-package com.example.gossip.firebaseauth.repository
+package com.example.gossip.repository.auth
 
 import android.app.Activity
 import com.example.gossip.repository.auth.AuthRepository
@@ -71,6 +71,9 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun signOut(){
+        authdb.signOut()
+    }
 
     override fun currentUser(): String{
         return authdb.currentUser?.uid ?: ""

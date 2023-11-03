@@ -1,4 +1,5 @@
-package com.example.gossip.ui.phonelogin
+package com.example.gossip.ui.settings
+
 
 import android.net.Uri
 import android.util.Log
@@ -28,10 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -53,13 +51,15 @@ import com.example.gossip.common.CommonDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsLogin(
+fun SettingScreen(
     username: String,
+    phoneNumber: String,
     image: Uri?,
     isDialog: Boolean,
     isError: Boolean,
     getUserName: (username: String) -> Unit,
     getImage: (image: Uri) -> Unit,
+    logout: () -> Unit,
     updateProfile: () -> Unit
 ) {
 
@@ -118,6 +118,8 @@ fun DetailsLogin(
             value = username,
             onValueChange = {
                 getUserName(it)
+//                phoneNumber = it
+//                isButtonEnabled = it.isNotEmpty()
             },
             label = { Text("Username") },
             leadingIcon = {
@@ -133,6 +135,10 @@ fun DetailsLogin(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
+//                    if (isButtonEnabled) {
+//                        // Handle login button click here
+                    updateProfile()
+//                    }
                     focusManager.clearFocus()
                 }
             ),
@@ -149,6 +155,26 @@ fun DetailsLogin(
                     }
                 }
         )
+        OutlinedTextField(
+            value = phoneNumber,
+            onValueChange = {
+//                getPhoneNumber(it)
+//                phoneNumber = it
+//                isButtonEnabled = it.isNotEmpty()
+            },
+            label = { Text("Phone Number") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
+            },
+            enabled = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -162,24 +188,34 @@ fun DetailsLogin(
             colors = ButtonDefaults.buttonColors()
         ) {
             Text(
-                text = "Let Me In",
+                text = "Update",
                 fontSize = 18.sp,
                 color = Color.White
             )
         }
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Logout",
+            fontSize = 15.sp,
+            modifier = Modifier.clickable {
+                logout()
+            }
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsLoginPreview() {
-    DetailsLogin(
+fun SettingScreenPreview() {
+    SettingScreen(
         username = "",
+        phoneNumber = "7903371384",
         image = null,
         isDialog = false,
         isError = false,
         getUserName = {},
         getImage = {},
+        logout = {},
         updateProfile = {}
     )
 }

@@ -91,8 +91,8 @@ fun Login(
                     focusManager.clearFocus()
                 }
             ),
-            maxLines = 1,
             isError = isError,
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
